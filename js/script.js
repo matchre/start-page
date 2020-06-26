@@ -47,7 +47,7 @@ var settings = {
 			["https://cse.google.com/cse/publicurl", "q", "CSE-Phinder", "sy", "005941353090358050370:2bp9oplgfym"],			
 			["https://cse.google.com/cse/publicurl", "q", "CSE-SES", "sy", "000159438708945803198:c670n89xtv8"],						
 			["https://cse.google.com/cse/publicurl", "q", "CSE-Sciences", "sy", "000159438708945803198:nhzecq54fyq"],								
-			["http://www.cnrtl.fr/definition/", "query", "CNRTL-Définition", "sd"],
+			["http://www.cnrtl.fr/definition/", "query", "CNRTL-DÃ©finition", "sd"],
 			["http://www.cnrtl.fr/synonymie/", "query", "CNRTL-Synonymes", "sd"],
 			["http://www.google.com/images", "q", "Google Images", "si"],			
 		],
@@ -71,9 +71,12 @@ var settings = {
 \*=========*/
 function updateClock() {
 	var currentTime = new Date ();
+	var currentDay = currentTime.getDate();
+	var currentMonth = currentTime.getMonth()+1;
 	var currentHours = currentTime.getHours ();
 	var currentMinutes = currentTime.getMinutes ();
 	var currentSeconds = currentTime.getSeconds ();
+	var currentDate = currentTime.toLocaleString();
 
 	// Pad the minutes and seconds with leading zeros, if required
 	currentMinutes = (currentMinutes < 10 ? "0" : "") + currentMinutes;
@@ -89,15 +92,31 @@ function updateClock() {
 	currentHours = (currentHours == 0) ? 12 : currentHours;
 
 	// Compose the string for display
-	var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
+	var currentTimeString = currentDay + "/" + currentMonth + " â€“ " + currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
 
 	// Fill '#clock' div with time
-	$("#clock").html(currentTimeString);
+	//$("#clock").html(currentTimeString);
+	$("#clock").html(currentDate);
 }
 
-function searchBox(url, name, placeholder) {
+/*
+function searchBox(url, name, placeholder, cx) {
 	var string = '<form method="get" action="' + url + '">'
+	+ '<input type="hidden" name="cx" value="'+cx+'" >'
 	           + '<input type="text" id="g" name="' + name + '" placeholder="' + placeholder + '" maxlength="255" value="">'
+	           + '<input type="submit" value="Go">'
+	           + '</form>';
+	return string;
+}
+*/
+
+
+function searchBox(url, name, placeholder, cx) {
+	var string = '<form method="get" action="' + url + '">';
+	if (cx) {
+			string=string+'<input type="hidden" name="cx" value="'+cx+'" >';
+	}
+	string=string+'<input type="text" id="g" name="' + name + '" placeholder="' + placeholder + '" maxlength="255" value="">'
 	           + '<input type="submit" value="Go">'
 	           + '</form>';
 	return string;
@@ -215,7 +234,11 @@ $(document).ready(function() {
 
 	for (var i = 0; i < settings.search.engines.length; i++) {
 		var engine = settings.search.engines[i];
-		search = search + searchBox(engine[0], engine[1], engine[2]);
+		if (engine[4]) {
+			search = search + searchBox(engine[0], engine[1], engine[2], engine[4]);
+		} else {
+			search = search + searchBox(engine[0], engine[1], engine[2]);
+		}
 		if(engine[3]) {
 			var jsSearchUrl=engine[0]+"?"+engine[1]+"=";
 			var jsSearchPrompt="prompt('Search "+engine[2]+":')";
