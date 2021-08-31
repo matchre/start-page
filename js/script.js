@@ -42,14 +42,7 @@ var settings = {
 	"search": {
 		"engines": [
 			["http://www.google.com/search", "q", "Google", "sg"],
-			["https://cse.google.com/cse/publicurl", "q", "CSE-CoursPhilo", "sy", "005941353090358050370:-rxleq99qm0"],
-			["https://cse.google.com/cse/publicurl", "q", "CSE-CinePhilo", "sy", "013022458855246154026:kvowwanvdza"],		
-			["https://cse.google.com/cse/publicurl", "q", "CSE-Phinder", "sy", "005941353090358050370:2bp9oplgfym"],			
-			["https://cse.google.com/cse/publicurl", "q", "CSE-SES", "sy", "000159438708945803198:c670n89xtv8"],						
-			["https://cse.google.com/cse/publicurl", "q", "CSE-Sciences", "sy", "000159438708945803198:nhzecq54fyq"],								
-			["http://www.cnrtl.fr/definition/", "query", "CNRTL-Définition", "sd"],
-			["http://www.cnrtl.fr/synonymie/", "query", "CNRTL-Synonymes", "sd"],
-			["http://www.google.com/images", "q", "Google Images", "si"],			
+					
 		],
 		"focusSearch": false
 	},
