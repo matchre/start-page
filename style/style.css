@@ -77,11 +77,6 @@ li img {
 	vertical-align: middle;
 }
 
-#searches {
-	position: absolute;											/* Position search box */
-	top: 2em;																/*		from top edge */
-	right: 2em;															/*		from right edge */
-}
 
 #clock {
 	position: absolute;
