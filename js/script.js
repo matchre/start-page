@@ -39,13 +39,7 @@ var settings = {
 		"newWindow": true
 	},
 	
-	"search": {
-		"engines": [
-			["http://www.google.com/search", "q", "Google", "sg"],
-					
-		],
-		"focusSearch": false
-	},
+	
 	
 	"clock": {
 		"showClock": true
@@ -220,35 +214,7 @@ $(document).ready(function() {
 	}
 
 
-	/*  Search Engines  *\
-	\*==================*/
 
-	var search = '<div id="searches">';
-
-	for (var i = 0; i < settings.search.engines.length; i++) {
-		var engine = settings.search.engines[i];
-		if (engine[4]) {
-			search = search + searchBox(engine[0], engine[1], engine[2], engine[4]);
-		} else {
-			search = search + searchBox(engine[0], engine[1], engine[2]);
-		}
-		if(engine[3]) {
-			var jsSearchUrl=engine[0]+"?"+engine[1]+"=";
-			var jsSearchPrompt="prompt('Search "+engine[2]+":')";
-			var jsSearch="'"+jsSearchUrl+"'+"+jsSearchPrompt;
-			shortcuts[engine[3]] = jsSearch;
-      }
-	}
-
-	search = search + '</div>';
-
-	/*  Add to page  *\
-	\*===============*/
-	$('body').append(search);
-	if(settings.search.focusSearch) {
-		var searchDiv = document.getElementById ('searches');
-		$(searchDiv.firstChild.firstChild).focus();
-	}
  
 	/*  Clock  *\
 	\*=========*/
