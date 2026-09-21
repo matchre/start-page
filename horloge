@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sonneries</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: #0f172a; color: #f8fafc;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { width: min(92vw, 640px); display: grid; gap: 20px; }
+  .carte {
+    background: #1e293b; border-radius: 24px; padding: 24px 28px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  }
+  .label { font-size: clamp(14px, 3.5vw, 18px); color: #94a3b8; }
+  .temps {
+    font-size: clamp(56px, 18vw, 128px); font-weight: 700; line-height: 1.05;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  #t1 { color: #facc15; }
+  .heure { font-size: clamp(14px, 3.5vw, 18px); color: #64748b; margin-top: 4px; }
+  footer { text-align: center; font-size: 13px; color: #475569; }
+</style>
+</head>
+<body>
+<main>
+  <section class="carte">
+    <div class="label">Prochaine sonnerie </div>
+    <div class="temps" id="t1">--:--</div>
+    <div class="heure" id="h1"></div>
+  </section>
+  <section class="carte">
+    <div class="label">Prochaine cours</div>
+    <div class="temps" id="t2">--:--</div>
+    <div class="heure" id="h2"></div>
+  </section>
+  <footer id="horloge"></footer>
+</main>
+
+<script>
+// Horaires de sonnerie [heure, minute]. Modifier ici si besoin.
+const SONNERIE_1 = [[7,55],[8,50],[9,50],[10,55],[11,50],[12,50],[13,50],[14,45],[15,45],[16,50],[17,50]];
+const SONNERIE_2 = [[8,0],[8,55],[10,5],[11,0],[11,55],[13,0],[13,55],[14,50],[16,0],[16,55]];
+
+const JOURS = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+const pad = n => String(n).padStart(2, "0");
+const hhmm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+// Prochaine sonnerie strictement après `now` (lundi-vendredi uniquement).
+function prochaine(horaires, now) {
+  for (let d = 0; d <= 7; d++) {
+    const jour = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d);
+    const w = jour.getDay();
+    if (w === 0 || w === 6) continue;
+    for (const [h, m] of horaires) {
+      const dt = new Date(jour.getFullYear(), jour.getMonth(), jour.getDate(), h, m, 0);
+      if (dt > now) return dt;
+    }
+  }
+  return null;
+}
+
+function fmt(ms) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+}
+
+function affiche(horaires, idT, idH, now) {
+  const cible = prochaine(horaires, now);
+  const memeJour = cible.toDateString() === now.toDateString();
+  document.getElementById(idT).textContent = fmt(cible - now);
+  document.getElementById(idH).textContent =
+    `à ${hhmm(cible)}${memeJour ? "" : " (" + JOURS[cible.getDay()] + ")"}`;
+  return cible;
+}
+
+function tick() {
+  const now = new Date();
+  const c1 = affiche(SONNERIE_1, "t1", "h1", now);
+  const c2 = affiche(SONNERIE_2, "t2", "h2", now);
+  document.getElementById("horloge").textContent = `${hhmm(now)}:${pad(now.getSeconds())}`;
+  document.title = `${fmt(c1 - now)} · ${fmt(c2 - now)} — Sonneries`;
+}
+tick();
+setInterval(tick, 250);
+</script>
+</body>
+</html>
